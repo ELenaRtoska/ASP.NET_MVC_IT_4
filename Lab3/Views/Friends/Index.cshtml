@@ -1,0 +1,78 @@
+﻿@model IEnumerable<Lab3.Models.FriendModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table" id="friendsTable">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.idFriend)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.mestoZiveenje)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.idFriend)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.mestoZiveenje)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                    <!--@Html.ActionLink("Delete", "Delete", new { id = item.Id })-->
+                    <a class="btn-link js-delete" data-Id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+
+
+
+@section scripts{
+    <script>
+        var table = $("#friendsTable").DataTable();
+        $("#friendsTable .js-delete").click(function () {
+            var button = $(this);
+            bootbox.confirm("Dali ste sigurni deka sakate da go izbrisete prijatelot?",
+                function (result) {
+                    if (result) {
+                        $.ajax({
+                            //method: "GET",
+                            //url: "/Friends/Delete/" + button.attr("data-Id"),
+                            method: "DELETE",
+                            url: "/api/Friends1/" + button.attr("data-Id"),
+                            success: function () {
+                                table.row(button.parents("tr")).remove().draw();
+                            }
+                        });
+                    }
+                });
+
+        });
+
+    </script>
+}
